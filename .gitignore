@@ -1,3 +1,6 @@
 *.swp
 *.pyc
+*.stderr
+*.stdout
+*.input
 .ipynb_checkpoints
