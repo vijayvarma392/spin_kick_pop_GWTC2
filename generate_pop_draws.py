@@ -363,6 +363,7 @@ if __name__ == "__main__":
     # save to file
     savedir = phi_sigma_prior
     os.system('mkdir -p {0}'.format(savedir))
+    np.save('{0}/q_pdfs.npy'.format(savedir), q_pdfs)
     np.save('{0}/chimag_pdfs.npy'.format(savedir), chimag_pdfs)
     np.save('{0}/costheta_pdfs.npy'.format(savedir), costheta_pdfs)
     np.save('{0}/phi1_pdfs.npy'.format(savedir), phi1_pdfs)
