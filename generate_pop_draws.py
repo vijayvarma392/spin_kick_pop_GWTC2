@@ -362,7 +362,7 @@ if __name__ == "__main__":
 
 
     # Number of population realizations
-    npop_draws = 3000
+    npop_draws = 5000
 
     # Evaluate spin population
     chimag_pdfs, costheta_pdfs, phi1_pdfs, delphi_pdfs \
