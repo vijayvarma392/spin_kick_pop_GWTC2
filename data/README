@@ -1,0 +1,7 @@
+# Files
+1. o1o2o3_mass_c_iid_mag_two_comp_iid_tilt_powerlaw_redshift_result.json
+   PowerLaw+Peak mass hyperposteriors from arxiv:2010.14533.
+2. result_Flatsigma.json
+   Spin hyperposteriors with Flat-sigma prior from arxiv:2107.09693
+3. result_Jeffreyssigma.json
+   Spin hyperposteriors with Jeffreys-sigma prior from arxiv:2107.09693
