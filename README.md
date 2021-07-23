@@ -24,7 +24,7 @@ PowerLaw+Peak mass-model hyperposteriors from arxiv:2010.14533.
 * `example.ipynb`: How to use the above population PDFs to plot 90% credible
   bounds. You can run this directly without running `generate_pop_draws.py`, in
   which case pre-evaluated PDF draws for the spin and kick populations are
-  plotted.
+  plotted. You can also use these pre-evaluated PDFs directly for your work.
 
 ## Dependencies
 All of these can be installed through pip or conda.
