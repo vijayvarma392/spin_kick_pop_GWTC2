@@ -23,6 +23,8 @@ from scipy.interpolate import interp1d
 import lal
 import surfinBH
 from pesummary.core.plots.bounded_1d_kde import bounded_1d_kde
+from multiprocessing import Pool
+from functools import partial
 import warnings
 # Ignore warnings about surrogate extrapolation
 warnings.filterwarnings("ignore",
@@ -300,23 +302,37 @@ def get_mass_ratio_pop(npop_draws=1):
         q_pdfs.append(prob_q)
     return np.array(q_pdfs)
 
+def get_kick_pop_for_pool(idx, tmp_args):
+    """ Version of get_kick_pdf for multiprocessing.
+    """
+    q_pdfs, chimag_pdfs, costheta_pdfs, phi1_pdfs, delphi_pdfs = tmp_args
+    prob_vfmag = get_kick_pdf(q_pdfs[idx],
+                              chimag_pdfs[idx],
+                              costheta_pdfs[idx],
+                              phi1_pdfs[idx],
+                              delphi_pdfs[idx])
+    return prob_vfmag
 
 def get_kick_pop(q_pdfs, chimag_pdfs, costheta_pdfs, phi1_pdfs,
-                 delphi_pdfs):
+                 delphi_pdfs, nprocs=1):
     """
     Evaluate kick population PDFs, given mass ratio and spin population PDFs.
     """
 
-    vfmag_pdfs = []
-    for idx in range(len(q_pdfs)):
-        prob_vfmag = get_kick_pdf(q_pdfs[idx],
-                                  chimag_pdfs[idx],
-                                  costheta_pdfs[idx],
-                                  phi1_pdfs[idx],
-                                  delphi_pdfs[idx])
-        vfmag_pdfs.append(prob_vfmag)
+    get_kick_pop_for_pool_partial = partial(get_kick_pop_for_pool,
+                                            tmp_args = [q_pdfs,
+                                                       chimag_pdfs,
+                                                       costheta_pdfs,
+                                                       phi1_pdfs,
+                                                       delphi_pdfs],
+                                           )
 
-    return vfmag_pdfs
+    pool = Pool(processes=nprocs)
+    vfmag_pdfs = pool.map(get_kick_pop_for_pool_partial, range(len(q_pdfs)))
+    pool.close()
+    pool.join()
+
+    return np.array(vfmag_pdfs)
 
 
 if __name__ == "__main__":
@@ -346,7 +362,7 @@ if __name__ == "__main__":
 
 
     # Number of population realizations
-    npop_draws = 1000
+    npop_draws = 3000
 
     # Evaluate spin population
     chimag_pdfs, costheta_pdfs, phi1_pdfs, delphi_pdfs \
@@ -357,8 +373,10 @@ if __name__ == "__main__":
 
 
     # Evaluate the corresponding kick populations
+    nprocs = 24     # Number of parallel procs. Only needed for kick pop.
+    print ("\nUsing {0} processors for kick population.".format(nprocs))
     vfmag_pdfs = get_kick_pop(q_pdfs, chimag_pdfs, costheta_pdfs, phi1_pdfs,
-                              delphi_pdfs)
+                              delphi_pdfs, nprocs=nprocs)
 
     # save to file
     savedir = phi_sigma_prior
