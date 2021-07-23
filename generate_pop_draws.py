@@ -239,12 +239,12 @@ def get_kick_pdf(prob_q, prob_chimag, prob_costheta, prob_phi1, prob_delphi):
                                              xlow=logvfmag_min,
                                              xhigh=logvfmag_max)
 
-    # Interpolate to uniform in vfmag grid
-    prob_vfmag_interp = interp1d(np.exp(logvfmag_grid),
-                          np.exp(logvfmag_kde),
-                          assume_sorted=True)
-    prob_vfmag = prob_vfmag_interp(xvals_dict['vfmag'])
-
+    # Interpolate to uniform in vfmag grid and transfrom from P(log(v)) to P(v)
+    prob_logvfmag_interp = interp1d(logvfmag_grid,
+                                         logvfmag_kde,
+                                         assume_sorted=True)
+    vfmag_grid = xvals_dict['vfmag']
+    prob_vfmag = prob_logvfmag_interp(np.log(vfmag_grid)) / vfmag_grid
     return prob_vfmag
 
 
@@ -309,7 +309,6 @@ def get_kick_pop(q_pdfs, chimag_pdfs, costheta_pdfs, phi1_pdfs,
 
     vfmag_pdfs = []
     for idx in range(len(q_pdfs)):
-        print (idx)
         prob_vfmag = get_kick_pdf(q_pdfs[idx],
                                   chimag_pdfs[idx],
                                   costheta_pdfs[idx],
@@ -347,7 +346,7 @@ if __name__ == "__main__":
 
 
     # Number of population realizations
-    npop_draws = 500
+    npop_draws = 1000
 
     # Evaluate spin population
     chimag_pdfs, costheta_pdfs, phi1_pdfs, delphi_pdfs \
