@@ -1,4 +1,6 @@
 # Spin and kick populations from arxiv:2107.09693
+Constraints on the astrophysical distributions of the black hole spins and
+recoil kicks using GWTC-2.
 
 ## Papers
 This repo is based on the following papers:
@@ -27,9 +29,8 @@ PowerLaw+Peak mass-model hyperposteriors from arxiv:2010.14533.
   plotted. You can also use these pre-evaluated PDFs directly for your work.
 
 ## Dependencies
+These are only needed for the `generate_pop_draws.py` script.
 All of these can be installed through pip or conda.
-* [numpy](https://docs.scipy.org/doc/numpy/user/install.html)
-* [scipy](https://www.scipy.org/install.html)
 * [surfinBH](https://pypi.org/project/surfinBH/)
 * [lalsuite](https://pypi.org/project/lalsuite)
 * [bilby](https://pypi.org/project/bilby/)
